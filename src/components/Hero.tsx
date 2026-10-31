@@ -32,6 +32,9 @@ export function Hero({ ready }: { ready: boolean }) {
         ref.current?.style.setProperty('--my', '0');
       }}
     >
+      <span className="hero__ghost" aria-hidden="true">
+        25
+      </span>
       <motion.span className="hero__light" style={{ x: glowX }} aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
