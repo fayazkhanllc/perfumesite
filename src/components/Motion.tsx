@@ -1,5 +1,23 @@
-import { motion, useReducedMotion } from 'motion/react';
-import type { ReactNode } from 'react';
+import { animate, motion, useInView, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+
+/** Number that counts up the first time it scrolls into view. */
+export function CountUp({ to, duration = 1.8 }: { to: number; duration?: number }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
+  const [n, setN] = useState(reduce ? to : 0);
+  useEffect(() => {
+    if (!inView || reduce) return;
+    const controls = animate(0, to, { duration, ease: [0.22, 1, 0.36, 1], onUpdate: (v) => setN(Math.round(v)) });
+    return () => controls.stop();
+  }, [inView, reduce, to, duration]);
+  return (
+    <span ref={ref} aria-label={String(to)}>
+      <span aria-hidden="true">{n}</span>
+    </span>
+  );
+}
 
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -93,7 +111,6 @@ export function GoldLine({ className = '', vertical = false }: { className?: str
         d={vertical ? 'M1 0 V100' : 'M0 1 H100'}
         stroke="currentColor"
         strokeWidth="1"
-        vectorEffect="non-scaling-stroke"
         fill="none"
         initial={reduce ? false : { pathLength: 0 }}
         whileInView={{ pathLength: 1 }}

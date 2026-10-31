@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { FILTERS, PRODUCTS, type StageId } from '../data/products';
 import { ProductCard } from './ProductCard';
-import { Handwriting, Reveal } from './Motion';
+import { CountUp, Handwriting, Reveal } from './Motion';
 
 export function Collection({ heading = true }: { heading?: boolean }) {
   const [filter, setFilter] = useState<'all' | StageId>('all');
@@ -23,6 +23,20 @@ export function Collection({ heading = true }: { heading?: boolean }) {
             <Handwriting className="collection__hand" delay={0.4} underline>
               Which chapter is yours?
             </Handwriting>
+            <ul className="facts">
+              <li>
+                <strong><CountUp to={25} /></strong>
+                <span>Fragrances</span>
+              </li>
+              <li>
+                <strong><CountUp to={5} duration={1.2} /></strong>
+                <span>Acts</span>
+              </li>
+              <li>
+                <strong><CountUp to={1} duration={0.8} /></strong>
+                <span>Journey</span>
+              </li>
+            </ul>
           </header>
         )}
 

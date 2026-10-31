@@ -14,6 +14,11 @@ export const siteConfig = {
   checkoutUrl: null as string | null,
   /** Official contact email. When null no contact address is shown. */
   contactEmail: null as string | null,
+  /**
+   * Newsletter form endpoint (Mailchimp, Klaviyo, Formspree, etc.). When null the footer form
+   * is shown as a clearly labelled preview and stores nothing.
+   */
+  newsletterAction: null as string | null,
   /** Official social profiles. Only filled entries are rendered in the footer. */
   social: {} as Partial<Record<'instagram' | 'tiktok' | 'facebook' | 'youtube' | 'x', string>>,
 };

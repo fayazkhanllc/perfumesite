@@ -16,7 +16,22 @@ export function Hero({ ready }: { ready: boolean }) {
 
   const show = ready || !!reduce;
   return (
-    <section className="hero" ref={ref} aria-labelledby="hero-title">
+    <section
+      className="hero"
+      ref={ref}
+      aria-labelledby="hero-title"
+      onPointerMove={(e) => {
+        // Gentle depth that follows a mouse. Skipped for touch/pen and reduced motion.
+        if (reduce || e.pointerType !== 'mouse' || !ref.current) return;
+        const r = ref.current.getBoundingClientRect();
+        ref.current.style.setProperty('--mx', String(((e.clientX - r.left) / r.width - 0.5) * 2));
+        ref.current.style.setProperty('--my', String(((e.clientY - r.top) / r.height - 0.5) * 2));
+      }}
+      onPointerLeave={() => {
+        ref.current?.style.setProperty('--mx', '0');
+        ref.current?.style.setProperty('--my', '0');
+      }}
+    >
       <motion.span className="hero__light" style={{ x: glowX }} aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">

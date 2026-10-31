@@ -12,6 +12,7 @@ import { Timeline } from '../components/Timeline';
 import { Finder } from '../components/Finder';
 import { BrandStory } from '../components/BrandStory';
 import { Campaign } from '../components/Campaign';
+import { Marquee } from '../components/Marquee';
 
 const SEEN = '25fragrance.intro.seen';
 
@@ -48,11 +49,13 @@ export function Home() {
       <AnimatePresence>{intro && <Intro onDone={finish} />}</AnimatePresence>
       <main id="main">
         <Hero ready={!intro} />
+        <Marquee />
         <Philosophy />
         <Collection />
         <FeaturedImagination />
         <Timeline />
         <Finder />
+        <Marquee reverse />
         <BrandStory />
         <Campaign />
       </main>
