@@ -105,7 +105,7 @@ export function Footer() {
       <div className="footer__inner">
         <div className="footer__brand">
           <p className="footer__logo">
-            <span>25</span> FRAGRANCE
+            <span>F</span> FRAGRANCE
           </p>
           <p className="footer__blurb">Twenty-five men’s fragrances. Twenty-five chapters. One extraordinary journey.</p>
           {siteConfig.contactEmail && (
@@ -155,11 +155,11 @@ export function Footer() {
       </div>
 
       <p className="footer__wordmark" aria-hidden="true">
-        <span>25</span> FRAGRANCE
+        <span>F</span> FRAGRANCE
       </p>
 
       <div className="footer__bar">
-        <p className="footer__legal">© {new Date().getFullYear()} 25 Fragrance. All rights reserved.</p>
+        <p className="footer__legal">© {new Date().getFullYear()} F Fragrance. All rights reserved.</p>
         <p className="footer__line">Every ambition has a fragrance.</p>
         <button type="button" className="footer__top" onClick={toTop}>
           Back to top <span aria-hidden="true">↑</span>

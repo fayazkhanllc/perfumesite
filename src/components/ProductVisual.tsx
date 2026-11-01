@@ -26,7 +26,7 @@ export function ProductVisual({
       <div className={`visual ${ratio}`}>
         <img
           src={image}
-          alt={alt ?? (product ? `25 Fragrance ${product.name}, fragrance ${product.number}` : '25 Fragrance')}
+          alt={alt ?? (product ? `F Fragrance ${product.name}, fragrance ${product.number}` : 'F Fragrance')}
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
           width={wide ? 1200 : 800}
@@ -51,7 +51,7 @@ export function ProductVisual({
         <path d="M22 122 V54 C22 30 34 16 50 16 S78 30 78 54 V122" fill="none" stroke="currentColor" strokeWidth="0.25" opacity="0.6" />
       </svg>
       <span className="visual__num" aria-hidden="true">
-        {product ? product.number : '25'}
+        {product ? product.number : 'F'}
       </span>
       <span className="visual__note">{label ?? 'Official photograph goes here'}</span>
     </div>

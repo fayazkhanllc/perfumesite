@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useMeta } from '../hooks/useMeta';
 
 export function NotFound({ what = 'page' }: { what?: string }) {
-  useMeta({ title: 'Not found — 25 Fragrance', description: 'This page could not be found.', path: '/404' });
+  useMeta({ title: 'Not found — F Fragrance', description: 'This page could not be found.', path: '/404' });
   return (
     <main id="main" className="page page--centered">
       <h1 className="display display--lg">This {what} does not exist.</h1>

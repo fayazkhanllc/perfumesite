@@ -21,7 +21,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
     <motion.div
       className="intro"
       role="dialog"
-      aria-label="25 Fragrance — Wear your ambition"
+      aria-label="F Fragrance — Wear your ambition"
       initial={{ clipPath: 'inset(0 0 0% 0)' }}
       exit={{ clipPath: 'inset(0 0 100% 0)' }}
       transition={{ duration: 0.9, ease: EASE }}
@@ -34,7 +34,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: EASE }}
         >
-          25
+          F
         </motion.span>
         <span className="intro__word">
           {letters.map((l, i) => (

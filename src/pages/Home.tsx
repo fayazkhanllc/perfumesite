@@ -26,7 +26,7 @@ function introAlreadySeen(): boolean {
 
 export function Home() {
   useMeta({
-    title: '25 Fragrance — Wear Your Ambition',
+    title: 'F Fragrance — Wear Your Ambition',
     description:
       'Twenty-five men’s fragrances, each one a chapter from imagination to legacy. Find the scent that speaks your language.',
     path: '/',

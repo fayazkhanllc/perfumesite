@@ -21,8 +21,8 @@ export function Info() {
   const { slug = '' } = useParams();
   const page = PAGES[slug];
   useMeta({
-    title: `${page?.title ?? 'Page'} — 25 Fragrance`,
-    description: `${page?.title ?? 'Information'} for 25 Fragrance.`,
+    title: `${page?.title ?? 'Page'} — F Fragrance`,
+    description: `${page?.title ?? 'Information'} for F Fragrance.`,
     path: `/info/${slug}`,
   });
   if (!page) return <NotFound />;

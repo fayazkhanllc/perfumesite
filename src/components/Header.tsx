@@ -162,8 +162,8 @@ export function Header() {
     <header className={`header ${solid ? 'header--solid' : ''}`}>
       <motion.div className="header__progress" style={{ scaleX: reduce ? scrollYProgress : progress }} aria-hidden="true" />
       <div className="header__inner">
-        <Link to="/" className="logo" aria-label="25 Fragrance — home">
-          <span className="logo__num">25</span>
+        <Link to="/" className="logo" aria-label="F Fragrance — home">
+          <span className="logo__num">F</span>
           <span className="logo__word">FRAGRANCE</span>
         </Link>
 

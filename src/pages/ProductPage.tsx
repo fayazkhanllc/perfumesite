@@ -33,7 +33,7 @@ function Detail({ slug }: { slug: string }) {
     product.description ?? `${product.name} is chapter ${product.number} of 25 in ${stage.label.toLowerCase()} — ${product.concept.toLowerCase()}`;
 
   useMeta({
-    title: `${product.name} — Fragrance ${product.number} — 25 Fragrance`,
+    title: `${product.name} — Fragrance ${product.number} — F Fragrance`,
     description,
     path: productPath(product),
     image: product.image,
@@ -44,9 +44,9 @@ function Detail({ slug }: { slug: string }) {
     const ld: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Product',
-      name: `${product.name} — 25 Fragrance`,
-      sku: `25F-${product.number}`,
-      brand: { '@type': 'Brand', name: '25 Fragrance' },
+      name: `${product.name} — F Fragrance`,
+      sku: `F-${product.number}`,
+      brand: { '@type': 'Brand', name: 'F Fragrance' },
       description,
     };
     const url = absoluteUrl(productPath(product));

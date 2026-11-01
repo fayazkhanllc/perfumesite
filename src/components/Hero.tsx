@@ -33,7 +33,7 @@ export function Hero({ ready }: { ready: boolean }) {
       }}
     >
       <span className="hero__ghost" aria-hidden="true">
-        25
+        F
       </span>
       <motion.span className="hero__light" style={{ x: glowX }} aria-hidden="true" />
       <div className="hero__inner">
@@ -93,7 +93,7 @@ export function Hero({ ready }: { ready: boolean }) {
           <div className="hero__float">
             <ProductVisual
               src={siteConfig.heroImage}
-              alt="A 25 Fragrance bottle"
+              alt="A F Fragrance bottle"
               eager
               label="Hero photograph goes here"
             />

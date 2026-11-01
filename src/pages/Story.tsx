@@ -5,8 +5,8 @@ import { Reveal } from '../components/Motion';
 
 export function Story() {
   useMeta({
-    title: 'Our story — 25 Fragrance',
-    description: '25 Fragrance gives every chapter of a man’s journey a name: twenty-five fragrances, twenty-five mindsets, one journey of becoming.',
+    title: 'Our story — F Fragrance',
+    description: 'F Fragrance gives every chapter of a man’s journey a name: twenty-five fragrances, twenty-five mindsets, one journey of becoming.',
     path: '/story',
   });
   return (

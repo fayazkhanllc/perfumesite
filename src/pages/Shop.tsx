@@ -4,8 +4,8 @@ import { Handwriting, Reveal } from '../components/Motion';
 
 export function Shop() {
   useMeta({
-    title: 'Shop all 25 fragrances — 25 Fragrance',
-    description: 'Browse the complete 25 Fragrance men’s collection, from Imagination to Immortal, and filter by chapter.',
+    title: 'Shop all 25 fragrances — F Fragrance',
+    description: 'Browse the complete F Fragrance men’s collection, from Imagination to Immortal, and filter by chapter.',
     path: '/shop',
   });
   return (
