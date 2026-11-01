@@ -24,6 +24,24 @@ export function ProductVisual({
 }) {
   const image = src ?? product?.image;
   const ratio = [wide ? 'visual--wide' : '', bare ? 'visual--bare' : ''].join(' ').trim();
+  if (image && product?.cutout && image === product.image && !bare) {
+    return (
+      <div className={`visual visual--stage ${ratio}`}>
+        <span className="visual__glow" aria-hidden="true" />
+        <span className="visual__ghostnum" aria-hidden="true">
+          {product.number}
+        </span>
+        <img
+          src={image}
+          alt={alt ?? `F Fragrance ${product.name}, fragrance ${product.number}`}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          width={500}
+          height={1000}
+        />
+      </div>
+    );
+  }
   if (image) {
     return (
       <div className={`visual ${ratio}`}>

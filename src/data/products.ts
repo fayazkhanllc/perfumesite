@@ -21,6 +21,8 @@ export type Availability = 'in_stock' | 'out_of_stock';
 export interface ProductDetails {
   /** Path or URL to the official product photograph, e.g. "/images/products/imagination.jpg". */
   image?: string;
+  /** True for transparent bottle cut-outs: shown on a violet stage instead of cropped as a photo. */
+  cutout?: boolean;
   /** Additional official photographs. */
   gallery?: string[];
   /** Price in the currency set in siteConfig. */
@@ -96,6 +98,8 @@ export const PRODUCTS: Product[] = RAW.map(([name, concept, stage], i) => {
     name,
     concept,
     stage,
+    image: `/images/products/${slug}.webp`,
+    cutout: true,
     ...(PRODUCT_DETAILS[slug] ?? {}),
   };
 });
