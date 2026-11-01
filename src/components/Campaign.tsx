@@ -28,7 +28,7 @@ export function Campaign() {
           </Reveal>
         </div>
         <div className="campaign__visual">
-          <ProductVisual src={siteConfig.heroImage} alt="F Fragrance campaign" label="Campaign photograph goes here" />
+          <ProductVisual src={siteConfig.heroImage} alt="F Fragrance MANIFEST eau de parfum bottle" bare label="Campaign photograph goes here" />
         </div>
       </div>
     </section>

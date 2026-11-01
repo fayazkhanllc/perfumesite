@@ -127,8 +127,9 @@ export function Hero({ ready }: { ready: boolean }) {
           <div className="hero__float">
             <ProductVisual
               src={siteConfig.heroImage}
-              alt="A F Fragrance bottle"
+              alt="F Fragrance MANIFEST, eau de parfum, 100 ml bottle"
               eager
+              bare
               label="Hero photograph goes here"
             />
           </div>

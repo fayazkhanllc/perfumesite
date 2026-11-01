@@ -10,6 +10,7 @@ export function ProductVisual({
   alt,
   wide = false,
   eager = false,
+  bare = false,
   label,
 }: {
   product?: Product;
@@ -17,10 +18,12 @@ export function ProductVisual({
   alt?: string;
   wide?: boolean;
   eager?: boolean;
+  /** Transparent cut-out photograph: no frame or background, bottle floats on the page. */
+  bare?: boolean;
   label?: string;
 }) {
   const image = src ?? product?.image;
-  const ratio = wide ? 'visual--wide' : '';
+  const ratio = [wide ? 'visual--wide' : '', bare ? 'visual--bare' : ''].join(' ').trim();
   if (image) {
     return (
       <div className={`visual ${ratio}`}>
@@ -29,8 +32,8 @@ export function ProductVisual({
           alt={alt ?? (product ? `F Fragrance ${product.name}, fragrance ${product.number}` : 'F Fragrance')}
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
-          width={wide ? 1200 : 800}
-          height={wide ? 750 : 1000}
+          width={bare ? 615 : wide ? 1200 : 800}
+          height={bare ? 1200 : wide ? 750 : 1000}
         />
       </div>
     );

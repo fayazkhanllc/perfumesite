@@ -9,7 +9,7 @@ export const siteConfig = {
   currency: 'USD',
   currencyLocale: 'en-US',
   /** Official hero photograph, e.g. "/images/hero.jpg". When null a replaceable placeholder is shown. */
-  heroImage: null as string | null,
+  heroImage: '/images/hero-bottle.webp' as string | null,
   /** Real checkout URL (hosted checkout, Shopify, Stripe, etc.). When null the Checkout button stays disabled. */
   checkoutUrl: null as string | null,
   /** Official contact email. When null no contact address is shown. */
