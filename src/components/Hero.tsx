@@ -1,11 +1,20 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
-import { useRef } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { siteConfig } from '../data/siteConfig';
 import { ProductVisual } from './ProductVisual';
 import { EASE, Handwriting } from './Motion';
 
 const LINES = ['YOUR STORY.', 'YOUR SCENT.', 'YOUR LEGACY.'];
+
+// Drifting golden motes: fixed values so the layout is identical on every load.
+const MOTES = Array.from({ length: 16 }, (_, i) => ({
+  l: (i * 37 + 11) % 100,
+  s: 2 + ((i * 5) % 4),
+  d: 15 + ((i * 7) % 13),
+  dl: -((i * 3.7) % 20),
+  x: (i % 2 ? 1 : -1) * (18 + ((i * 13) % 52)),
+}));
 
 export function Hero({ ready }: { ready: boolean }) {
   const reduce = useReducedMotion();
@@ -32,6 +41,18 @@ export function Hero({ ready }: { ready: boolean }) {
         ref.current?.style.setProperty('--my', '0');
       }}
     >
+      <div className="hero__sky" aria-hidden="true">
+        <span className="hero__rays" />
+        <span className="hero__mist hero__mist--a" />
+        <span className="hero__mist hero__mist--b" />
+        {MOTES.map((m, i) => (
+          <span
+            key={i}
+            className="hero__mote"
+            style={{ '--l': `${m.l}%`, '--s': `${m.s}px`, '--d': `${m.d}s`, '--dl': `${m.dl}s`, '--x': `${m.x}px` } as CSSProperties}
+          />
+        ))}
+      </div>
       <span className="hero__ghost" aria-hidden="true">
         F
       </span>
@@ -90,6 +111,19 @@ export function Hero({ ready }: { ready: boolean }) {
           animate={{ opacity: show ? 1 : 0, scale: show ? 1 : 0.96 }}
           transition={{ duration: 1.4, ease: EASE, delay: 0.4 }}
         >
+          <span className="hero__halo" aria-hidden="true" />
+          <svg className="hero__wisps" viewBox="0 0 200 300" aria-hidden="true">
+            <defs>
+              <linearGradient id="wisp-grad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+                <stop offset="0.5" stopColor="#f3e6ff" stopOpacity="0.95" />
+                <stop offset="1" stopColor="#e8d6a5" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path className="wisp wisp--1" pathLength="1" d="M100 300 C 52 240, 150 200, 100 150 S 56 62, 112 0" />
+            <path className="wisp wisp--2" pathLength="1" d="M92 300 C 140 250, 40 190, 96 140 S 150 50, 90 0" />
+            <path className="wisp wisp--3" pathLength="1" d="M110 300 C 80 250, 130 170, 108 120 S 70 40, 120 0" />
+          </svg>
           <div className="hero__float">
             <ProductVisual
               src={siteConfig.heroImage}
@@ -107,6 +141,10 @@ export function Hero({ ready }: { ready: boolean }) {
           </span>
         </motion.div>
       </div>
+      <Link to="/#collection" className="hero__scroll" aria-label="Scroll to the collection">
+        <span>SCROLL</span>
+        <i aria-hidden="true" />
+      </Link>
     </section>
   );
 }
