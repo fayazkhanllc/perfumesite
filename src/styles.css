@@ -3052,7 +3052,7 @@ html {
 /* --- 3D ring showcase --- */
 .ring {
   position: relative;
-  padding: clamp(4.5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 6rem);
+  padding: clamp(6.5rem, 11vw, 9rem) 0 clamp(4rem, 8vw, 6rem);
   background: radial-gradient(ellipse 80% 60% at 50% 55%, rgba(124, 77, 230, 0.35), transparent 70%), var(--night);
   overflow: hidden;
   text-align: center;

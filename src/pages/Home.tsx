@@ -49,12 +49,12 @@ export function Home() {
     <>
       <AnimatePresence>{intro && <Intro onDone={finish} />}</AnimatePresence>
       <main id="main">
+        <Carousel3D />
         <Hero ready={!intro} />
         <Marquee />
         <Philosophy />
         <Collection />
         <FeaturedImagination />
-        <Carousel3D />
         <Timeline />
         <Finder />
         <Marquee reverse />
