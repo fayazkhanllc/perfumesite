@@ -6,8 +6,8 @@ export const siteConfig = {
   /** Production domain, e.g. "https://25fragrance.com". Enables canonical URLs and absolute OG URLs. */
   siteUrl: '' as string,
   /** Used only to format prices that are set in products.ts. */
-  currency: 'USD',
-  currencyLocale: 'en-US',
+  currency: 'PKR',
+  currencyLocale: 'en-PK',
   /** Official hero photograph, e.g. "/images/hero.jpg". When null a replaceable placeholder is shown. */
   heroImage: '/images/hero-bottle.webp' as string | null,
   /** Real checkout URL (hosted checkout, Shopify, Stripe, etc.). When null the Checkout button stays disabled. */
@@ -27,6 +27,8 @@ export function formatPrice(value: number): string {
   return new Intl.NumberFormat(siteConfig.currencyLocale, {
     style: 'currency',
     currency: siteConfig.currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: Number.isInteger(value) ? 0 : 2,
   }).format(value);
 }
 

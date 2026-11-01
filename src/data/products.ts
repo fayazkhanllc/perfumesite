@@ -87,6 +87,9 @@ const RAW: Array<[string, string, StageId]> = [
  *     notes: ['…verified notes…'],
  *   },
  */
+/** Current price for every fragrance, in the currency set in siteConfig. Override per product in PRODUCT_DETAILS. */
+export const DEFAULT_PRICE = 2499;
+
 export const PRODUCT_DETAILS: Record<string, ProductDetails> = {};
 
 export const PRODUCTS: Product[] = RAW.map(([name, concept, stage], i) => {
@@ -100,6 +103,7 @@ export const PRODUCTS: Product[] = RAW.map(([name, concept, stage], i) => {
     stage,
     image: `/images/products/${slug}.webp`,
     cutout: true,
+    price: DEFAULT_PRICE,
     ...(PRODUCT_DETAILS[slug] ?? {}),
   };
 });
