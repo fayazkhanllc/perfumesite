@@ -6,6 +6,7 @@ import { formatPrice } from '../data/siteConfig';
 import { useCart } from '../context/CartContext';
 import { ProductVisual } from './ProductVisual';
 import { EASE } from './Motion';
+import { Tilt3D } from './Tilt3D';
 
 export function AddToBagButton({
   product,
@@ -52,12 +53,14 @@ export function ProductCard({ product, index = 0, wide = false }: { product: Pro
       viewport={{ once: true, margin: '-6% 0px' }}
       transition={{ duration: 0.8, ease: EASE, delay: (index % 3) * 0.08 }}
     >
+      <Tilt3D className="card__tilt">
       <Link to={productPath(product)} className="card__media" aria-label={`View ${product.name}`} tabIndex={-1}>
         <ProductVisual product={product} wide={wide} />
         <span className="card__num" aria-hidden="true">
           {product.number}
         </span>
       </Link>
+      </Tilt3D>
       <div className="card__body">
         <h3 className="card__name">
           <Link to={productPath(product)}>{product.name}</Link>

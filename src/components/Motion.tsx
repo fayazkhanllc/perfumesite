@@ -87,8 +87,9 @@ export function Reveal({
   return (
     <Tag
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { opacity: 0, y, rotateX: 14, transformPerspective: 900 }}
+      style={{ transformOrigin: '50% 100%' }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       viewport={{ once: true, margin: '-8% 0px' }}
       transition={{ duration: 0.9, ease: EASE, delay }}
     >

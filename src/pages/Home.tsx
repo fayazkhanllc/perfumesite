@@ -8,6 +8,7 @@ import { Hero } from '../components/Hero';
 import { Philosophy } from '../components/Philosophy';
 import { Collection } from '../components/Collection';
 import { FeaturedImagination } from '../components/FeaturedImagination';
+import { Carousel3D } from '../components/Carousel3D';
 import { Timeline } from '../components/Timeline';
 import { Finder } from '../components/Finder';
 import { BrandStory } from '../components/BrandStory';
@@ -53,6 +54,7 @@ export function Home() {
         <Philosophy />
         <Collection />
         <FeaturedImagination />
+        <Carousel3D />
         <Timeline />
         <Finder />
         <Marquee reverse />

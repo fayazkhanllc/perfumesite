@@ -2971,3 +2971,260 @@ html {
 .drawer__foot .btn--whatsapp {
   min-height: 3.2rem;
 }
+
+/* ==========================================================================
+   3D immersive layer
+   ========================================================================== */
+
+/* --- Tilt (cards, product page) --- */
+.tilt {
+  perspective: 900px;
+}
+.tilt__inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s var(--ease);
+  will-change: transform;
+}
+.tilt__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: calc(var(--on, 0) * 0.9);
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.28), rgba(214, 190, 255, 0.08) 32%, transparent 55%);
+  mix-blend-mode: screen;
+  transition: opacity 0.4s;
+}
+.card__tilt .card__media {
+  box-shadow: 0 30px 50px -34px rgba(8, 2, 22, 0.9);
+}
+.card__tilt .card__num {
+  translate: 0 0 34px;
+}
+
+/* --- Hero depth stage --- */
+.hero__visual {
+  perspective: 1100px;
+}
+.hero__stage {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--mx, 0) * 11deg)) rotateX(calc(var(--my, 0) * -7deg));
+  transition: transform 0.6s var(--ease);
+}
+.hero__stage .hero__halo {
+  translate: -50% -50% -170px;
+}
+.hero__stage .hero__wisps {
+  translate: -50% 0 90px;
+}
+.hero__stage .hero__float {
+  translate: 0 0 40px;
+}
+.hero__stage .hero__note {
+  translate: -50% 0 120px;
+}
+.hero__dust {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+@media (hover: none) {
+  .hero__stage {
+    animation: hero-sway 14s ease-in-out infinite;
+  }
+}
+@keyframes hero-sway {
+  0%,
+  100% {
+    transform: rotateY(-9deg) rotateX(2deg);
+  }
+  50% {
+    transform: rotateY(9deg) rotateX(-3deg);
+  }
+}
+
+/* --- 3D ring showcase --- */
+.ring {
+  position: relative;
+  padding: clamp(4.5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 6rem);
+  background: radial-gradient(ellipse 80% 60% at 50% 55%, rgba(124, 77, 230, 0.35), transparent 70%), var(--night);
+  overflow: hidden;
+  text-align: center;
+}
+.ring__head {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+.ring__hand {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+.ring__stage {
+  --w: 190px;
+  --R: 800px;
+  position: relative;
+  height: clamp(400px, 44vw, 560px);
+  margin-top: 2rem;
+  perspective: 1500px;
+  perspective-origin: 50% 30%;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  outline-offset: -4px;
+}
+.ring__stage.is-dragging {
+  cursor: grabbing;
+}
+.ring__glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(80vw, 760px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(168, 126, 255, 0.16) 35%, transparent 65%);
+  pointer-events: none;
+}
+.ring__floor {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  width: min(92vw, 880px);
+  height: 120px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(232, 214, 165, 0.26), rgba(139, 92, 246, 0.14) 40%, transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+.ring__depth {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--R) * -1));
+}
+.ring__ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.ring__item {
+  position: absolute;
+  left: calc(var(--w) / -2);
+  top: 4%;
+  width: var(--w);
+  transform: rotateY(var(--a)) translateZ(var(--R));
+  backface-visibility: hidden;
+  transition: opacity 0.5s;
+  -webkit-box-reflect: below 6px linear-gradient(transparent 70%, rgba(255, 255, 255, 0.22));
+}
+.ring__bottle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: inherit;
+}
+.ring__bottle .visual {
+  pointer-events: none;
+}
+.ring__item.is-active .visual {
+  box-shadow: 0 0 0 1px rgba(212, 175, 106, 0.55), 0 0 46px rgba(212, 175, 106, 0.28);
+}
+.ring__controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 560px) auto;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 3vw, 2.5rem);
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+.ring__arrow {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 214, 165, 0.45);
+  background: rgba(20, 8, 48, 0.5);
+  color: var(--soft-gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, transform 0.3s var(--ease);
+}
+.ring__arrow:hover {
+  background: var(--gold);
+  color: #1a0b36;
+  transform: scale(1.08);
+}
+.ring__info {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+}
+.ring__count {
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  color: var(--soft-gold);
+}
+.ring__name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  letter-spacing: 0.12em;
+  line-height: 1.05;
+  text-shadow: 0 0 40px rgba(196, 160, 255, 0.5);
+}
+.ring__concept {
+  font-family: var(--hand);
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  color: var(--soft-gold);
+}
+.ring__price {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+}
+.ring__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+@media (max-width: 700px) {
+  .ring__stage {
+    --w: 112px;
+    --R: 480px;
+    height: 330px;
+  }
+  .ring__controls {
+    grid-template-columns: 1fr;
+  }
+  .ring__arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__stage,
+  .tilt__inner {
+    transform: none !important;
+    animation: none !important;
+    transition: none;
+  }
+  .tilt__glare {
+    display: none;
+  }
+}

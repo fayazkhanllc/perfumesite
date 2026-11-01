@@ -7,6 +7,7 @@ import { CART_MAX_QTY } from '../context/CartContext';
 import { useMeta } from '../hooks/useMeta';
 import { AddToBagButton, ProductCard } from '../components/ProductCard';
 import { ProductVisual } from '../components/ProductVisual';
+import { Tilt3D } from '../components/Tilt3D';
 import { EASE, GoldLine, Handwriting } from '../components/Motion';
 import { whatsappOrderUrl } from '../data/whatsapp';
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
@@ -92,7 +93,9 @@ function Detail({ slug }: { slug: string }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <ProductVisual product={product} eager />
+          <Tilt3D max={7}>
+            <ProductVisual product={product} eager />
+          </Tilt3D>
           <span className="pdp__bignum" aria-hidden="true">
             {product.number}
           </span>

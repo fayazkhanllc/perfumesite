@@ -1,20 +1,12 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
-import { useRef, type CSSProperties } from 'react';
+import { useRef } from 'react';
 import { siteConfig } from '../data/siteConfig';
 import { ProductVisual } from './ProductVisual';
+import { DepthDust } from './DepthDust';
 import { EASE, Handwriting } from './Motion';
 
 const LINES = ['YOUR STORY.', 'YOUR SCENT.', 'YOUR LEGACY.'];
-
-// Drifting golden motes: fixed values so the layout is identical on every load.
-const MOTES = Array.from({ length: 16 }, (_, i) => ({
-  l: (i * 37 + 11) % 100,
-  s: 2 + ((i * 5) % 4),
-  d: 15 + ((i * 7) % 13),
-  dl: -((i * 3.7) % 20),
-  x: (i % 2 ? 1 : -1) * (18 + ((i * 13) % 52)),
-}));
 
 export function Hero({ ready }: { ready: boolean }) {
   const reduce = useReducedMotion();
@@ -45,13 +37,7 @@ export function Hero({ ready }: { ready: boolean }) {
         <span className="hero__rays" />
         <span className="hero__mist hero__mist--a" />
         <span className="hero__mist hero__mist--b" />
-        {MOTES.map((m, i) => (
-          <span
-            key={i}
-            className="hero__mote"
-            style={{ '--l': `${m.l}%`, '--s': `${m.s}px`, '--d': `${m.d}s`, '--dl': `${m.dl}s`, '--x': `${m.x}px` } as CSSProperties}
-          />
-        ))}
+        <DepthDust reduce={!!reduce} />
       </div>
       <span className="hero__ghost" aria-hidden="true">
         F
@@ -111,6 +97,7 @@ export function Hero({ ready }: { ready: boolean }) {
           animate={{ opacity: show ? 1 : 0, scale: show ? 1 : 0.96 }}
           transition={{ duration: 1.4, ease: EASE, delay: 0.4 }}
         >
+          <div className="hero__stage">
           <span className="hero__halo" aria-hidden="true" />
           <svg className="hero__wisps" viewBox="0 0 200 300" aria-hidden="true">
             <defs>
@@ -140,6 +127,7 @@ export function Hero({ ready }: { ready: boolean }) {
               </Handwriting>
             )}
           </span>
+          </div>
         </motion.div>
       </div>
       <Link to="/#collection" className="hero__scroll" aria-label="Scroll to the collection">
