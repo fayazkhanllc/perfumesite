@@ -12,6 +12,8 @@ export const siteConfig = {
   heroImage: '/images/hero-bottle.webp' as string | null,
   /** Real checkout URL (hosted checkout, Shopify, Stripe, etc.). When null the Checkout button stays disabled. */
   checkoutUrl: null as string | null,
+  /** WhatsApp number for orders, digits only with country code (no + or spaces). */
+  whatsappNumber: '923025444738' as string | null,
   /** Official contact email. When null no contact address is shown. */
   contactEmail: null as string | null,
   /**

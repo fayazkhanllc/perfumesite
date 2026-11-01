@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useCart, CART_MAX_QTY } from '../context/CartContext';
 import { formatPrice, siteConfig } from '../data/siteConfig';
 import { productPath } from '../data/products';
+import { whatsappOrderUrl } from '../data/whatsapp';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { EASE } from './Motion';
 
 export function CartDrawer() {
@@ -26,6 +28,7 @@ export function CartDrawer() {
   }, [isOpen, closeCart]);
 
   const priced = subtotal !== null;
+  const waUrl = whatsappOrderUrl(lines);
 
   return (
     <AnimatePresence>
@@ -127,6 +130,12 @@ export function CartDrawer() {
                       ? 'Shipping and taxes are confirmed at checkout.'
                       : 'Prices are not published yet, so a subtotal cannot be calculated.'}
                   </p>
+                  {waUrl && (
+                    <a className="btn btn--whatsapp btn--block" href={waUrl} target="_blank" rel="noopener noreferrer">
+                      <WhatsAppIcon />
+                      Order on WhatsApp
+                    </a>
+                  )}
                   {siteConfig.checkoutUrl ? (
                     <a className="btn btn--gold btn--block" href={siteConfig.checkoutUrl}>
                       Checkout
@@ -134,10 +143,12 @@ export function CartDrawer() {
                   ) : (
                     <>
                       <button type="button" className="btn btn--gold btn--block" disabled>
-                        Checkout
+                        Online checkout
                       </button>
                       <p className="drawer__note drawer__note--warn">
-                        Checkout is not connected yet. Your bag is saved on this device and will be here when it opens.
+                        {waUrl
+                          ? 'Online checkout is not open yet. Send your bag on WhatsApp and we will confirm your order. Your bag is saved on this device.'
+                          : 'Checkout is not connected yet. Your bag is saved on this device and will be here when it opens.'}
                       </p>
                     </>
                   )}

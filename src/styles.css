@@ -2939,3 +2939,35 @@ html {
 .pdp__media .visual--stage {
   box-shadow: 0 50px 80px -40px rgba(10, 2, 30, 0.7);
 }
+
+/* ---------- WhatsApp ordering ---------- */
+.btn--whatsapp {
+  border-color: rgba(37, 211, 102, 0.65);
+  color: var(--white);
+  background: rgba(37, 211, 102, 0.08);
+}
+.btn--whatsapp::before {
+  background: #25d366;
+}
+.btn--whatsapp .wa-icon {
+  flex: none;
+  fill: #25d366;
+  transition: fill 0.45s var(--ease);
+}
+.btn--whatsapp:hover,
+.btn--whatsapp:focus-visible {
+  color: #06220f;
+  border-color: #25d366;
+}
+.btn--whatsapp:hover .wa-icon,
+.btn--whatsapp:focus-visible .wa-icon {
+  fill: #06220f;
+}
+.pdp__wa {
+  width: 100%;
+  max-width: 28rem;
+  margin: -0.5rem 0 1.25rem;
+}
+.drawer__foot .btn--whatsapp {
+  min-height: 3.2rem;
+}

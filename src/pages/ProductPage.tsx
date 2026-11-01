@@ -8,6 +8,8 @@ import { useMeta } from '../hooks/useMeta';
 import { AddToBagButton, ProductCard } from '../components/ProductCard';
 import { ProductVisual } from '../components/ProductVisual';
 import { EASE, GoldLine, Handwriting } from '../components/Motion';
+import { whatsappOrderUrl } from '../data/whatsapp';
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { NotFound } from './NotFound';
 
 export function ProductPage() {
@@ -69,6 +71,7 @@ function Detail({ slug }: { slug: string }) {
     return () => el.remove();
   }, [product, description]);
 
+  const waUrl = whatsappOrderUrl([{ product, qty }]);
   const availability =
     product.availability === 'in_stock' ? 'In stock' : product.availability === 'out_of_stock' ? 'Sold out' : 'Availability to be confirmed';
 
@@ -135,6 +138,13 @@ function Detail({ slug }: { slug: string }) {
             </div>
             <AddToBagButton product={product} qty={qty} className="btn btn--gold btn--grow" label="Add to bag" />
           </div>
+
+          {waUrl && (
+            <a className="btn btn--whatsapp pdp__wa" href={waUrl} target="_blank" rel="noopener noreferrer">
+              <WhatsAppIcon />
+              Order on WhatsApp
+            </a>
+          )}
 
           <section className="pdp__section" aria-labelledby="pdp-about">
             <h2 id="pdp-about" className="pdp__h">
