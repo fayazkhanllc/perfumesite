@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react';
 import { siteConfig } from '../data/siteConfig';
 import { ProductVisual } from './ProductVisual';
+import { JourneyButton } from './Journey';
 import { DepthDust } from './DepthDust';
 import { EASE, Handwriting } from './Motion';
 
@@ -87,6 +88,7 @@ export function Hero({ ready }: { ready: boolean }) {
             <Link to="/story" className="btn btn--outline">
               OUR STORY
             </Link>
+            <JourneyButton className="btn btn--outline" />
           </motion.div>
         </div>
 

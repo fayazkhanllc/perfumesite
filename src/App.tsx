@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
+import { Ambient } from './components/Ambient';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { ScrollManager } from './components/ScrollManager';
@@ -17,6 +18,7 @@ export function App() {
         Skip to content
       </a>
       <ScrollManager />
+      <Ambient />
       <Header />
       <CartDrawer />
       <Routes>

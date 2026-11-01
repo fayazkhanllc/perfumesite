@@ -3228,3 +3228,243 @@ html {
     display: none;
   }
 }
+
+/* ==========================================================================
+   Experience layer: progress line, cursor light, guided journey
+   ========================================================================== */
+.progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 70;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--gold), #fff3cf);
+  pointer-events: none;
+}
+.cursorlight {
+  position: fixed;
+  left: -150px;
+  top: -150px;
+  z-index: 60;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 214, 165, 0.2), rgba(168, 126, 255, 0.1) 40%, transparent 68%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s, scale 0.4s var(--ease);
+}
+.cursorlight.is-link {
+  scale: 1.5;
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cursorlight {
+    display: none;
+  }
+}
+
+.journey3d {
+  --hue: 262 70% 22%;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  color: #fff;
+  outline: 0;
+  overflow: hidden;
+  background: hsl(var(--hue));
+  transition: background 0.9s;
+}
+.journey3d__bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(214, 190, 255, 0.32), transparent 70%), radial-gradient(ellipse 100% 50% at 50% 110%, rgba(232, 214, 165, 0.2), transparent 70%);
+  pointer-events: none;
+}
+.journey3d__top,
+.journey3d__nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem clamp(1rem, 4vw, 3rem);
+}
+.journey3d__nav {
+  justify-content: center;
+  gap: 1.5rem;
+}
+.journey3d__brand {
+  font-size: 0.78rem;
+  letter-spacing: 0.4em;
+  color: var(--soft-gold);
+}
+.journey3d__close {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 214, 165, 0.45);
+  background: transparent;
+  color: var(--soft-gold);
+  cursor: pointer;
+}
+.journey3d__scene {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow-y: auto;
+  perspective: 1400px;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+}
+.journey3d__panel {
+  width: min(1180px, 100%);
+}
+.journey3d__welcome {
+  display: grid;
+  justify-items: center;
+  gap: 1.4rem;
+  text-align: center;
+}
+.journey3d__hint {
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: var(--soft-gold);
+  opacity: 0.8;
+}
+.journey3d__act {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(1rem, 4vw, 4rem);
+}
+.journey3d__copy {
+  text-align: left;
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+.journey3d__pick {
+  text-align: left;
+  justify-items: start;
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--gold);
+}
+.journey3d__pick h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  letter-spacing: 0.1em;
+}
+.journey3d__no {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--soft-gold);
+}
+.journey3d__concept {
+  font-family: var(--hand);
+  font-size: 1.5rem;
+  color: var(--soft-gold);
+}
+.journey3d__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+.journey3d__row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.4rem, 1.4vw, 1rem);
+  perspective: 1200px;
+}
+.journey3d__row li {
+  flex: 1 1 0;
+  max-width: 190px;
+  transform: rotateY(calc(var(--i) * -6deg)) translateZ(calc(var(--i) * var(--i) * -14px)) scale(0.82);
+  opacity: 0.55;
+  transition: transform 0.7s var(--ease), opacity 0.5s;
+}
+.journey3d__row li.is-on {
+  transform: translateZ(60px) scale(1.12);
+  opacity: 1;
+  z-index: 2;
+}
+.journey3d__row button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.journey3d__row .visual {
+  pointer-events: none;
+}
+.journey3d__row li.is-on .visual {
+  box-shadow: 0 0 0 1px rgba(212, 175, 106, 0.6), 0 24px 60px -14px rgba(0, 0, 0, 0.6), 0 0 50px rgba(212, 175, 106, 0.25);
+}
+.journey3d__dots {
+  display: flex;
+  gap: 0.7rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.journey3d__dots button {
+  width: 0.7rem;
+  height: 0.7rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--soft-gold);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s, scale 0.3s;
+}
+.journey3d__dots button.is-on {
+  background: var(--gold);
+  scale: 1.35;
+}
+.journey3d .ring__arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (max-width: 800px) {
+  .journey3d__act {
+    grid-template-columns: 1fr;
+    padding: 0.5rem 0 1rem;
+  }
+  .journey3d__row {
+    order: -1;
+  }
+  .journey3d__row li {
+    max-width: 90px;
+  }
+  .journey3d__scene {
+    place-items: start center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey3d__row li {
+    transition: none;
+  }
+}
+@media (max-width: 800px) {
+  .journey3d .ring__arrow {
+    display: inline-block;
+  }
+  .journey3d__row {
+    padding-top: 1.6rem;
+  }
+}

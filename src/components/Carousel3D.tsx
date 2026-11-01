@@ -6,6 +6,7 @@ import { formatPrice } from '../data/siteConfig';
 import { ProductVisual } from './ProductVisual';
 import { AddToBagButton } from './ProductCard';
 import { Handwriting, Reveal } from './Motion';
+import { JourneyButton } from './Journey';
 
 const N = PRODUCTS.length;
 const STEP = 360 / N;
@@ -56,6 +57,7 @@ export function Carousel3D() {
         <Handwriting className="ring__hand" delay={0.3} underline>
           Drag. Spin. Choose your chapter.
         </Handwriting>
+        <JourneyButton className="btn btn--gold" />
       </div>
 
       <div
