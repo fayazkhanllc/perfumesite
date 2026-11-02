@@ -3781,3 +3781,32 @@ html {
   pointer-events: none;
   opacity: 0;
 }
+
+/* Eagle sound toggle */
+.eaglesound {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 58;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+  border: 1px solid rgba(232, 214, 165, 0.4);
+  border-radius: 999px;
+  background: rgba(20, 8, 48, 0.62);
+  backdrop-filter: blur(10px);
+  color: var(--soft-gold);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+}
+.eaglesound:hover {
+  border-color: var(--gold);
+  color: #fff;
+}
+.eaglesound:not(.is-on) {
+  opacity: 0.75;
+}

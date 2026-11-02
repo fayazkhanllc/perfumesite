@@ -16,6 +16,7 @@ import { Campaign } from '../components/Campaign';
 import { Marquee } from '../components/Marquee';
 
 const EagleScene = lazy(() => import('../components/eagles/EagleScene'));
+const EagleSoundToggle = lazy(() => import('../components/eagles/EagleSoundToggle'));
 
 const SEEN = '25fragrance.intro.seen';
 
@@ -64,6 +65,7 @@ export function Home() {
       {flock && (
         <Suspense fallback={null}>
           <EagleScene />
+          <EagleSoundToggle />
         </Suspense>
       )}
       <main id="main">
