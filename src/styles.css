@@ -3070,7 +3070,7 @@ html {
   --w: 190px;
   --R: 800px;
   position: relative;
-  height: clamp(400px, 44vw, 560px);
+  height: 350px;
   margin-top: 2rem;
   perspective: 1500px;
   perspective-origin: 50% 30%;
@@ -3096,9 +3096,9 @@ html {
 .ring__floor {
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  bottom: 0;
   width: min(92vw, 880px);
-  height: 120px;
+  height: 90px;
   translate: -50% 0;
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(232, 214, 165, 0.26), rgba(139, 92, 246, 0.14) 40%, transparent 70%);
@@ -3150,7 +3150,7 @@ html {
   align-items: center;
   justify-content: center;
   gap: clamp(0.75rem, 3vw, 2.5rem);
-  margin-top: 1.5rem;
+  margin-top: 0;
   padding: 0 1rem;
 }
 .ring__arrow {
@@ -3207,7 +3207,7 @@ html {
   .ring__stage {
     --w: 112px;
     --R: 480px;
-    height: 330px;
+    height: 250px;
   }
   .ring__controls {
     grid-template-columns: 1fr;
