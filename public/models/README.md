@@ -1,7 +1,6 @@
 # 3D models
 
-- `eagle.glb` — **REQUIRED, NOT YET PRESENT.** Add a licensed, rigged, animated eagle here (at least one flight/flap clip).
-  When it exists the flock uses it automatically; no code changes needed. If its beak does not point forward,
-  change `MODEL_YAW` in `src/components/eagles/EagleScene.tsx`.
-- `stand-in-stork.glb` — TEMPORARY placeholder: the low-poly animated stork from the three.js examples
-  (mrdoob/three.js, examples/models/gltf/Stork.glb, by mirada.com, CC-BY). It is not an eagle.
+- `eagle.glb` — OPTIONAL upgrade. Add a licensed, rigged, animated eagle here (at least one flight clip) and the
+  flock uses it automatically. If its beak does not point forward, change `MODEL_YAW` in
+  `src/components/eagles/EagleScene.tsx`.
+- Without it, a procedural golden eagle built in code is used (`src/components/eagles/eagleModel.ts`).

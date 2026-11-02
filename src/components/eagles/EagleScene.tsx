@@ -4,11 +4,9 @@ import {
   Box3,
   Color,
   DirectionalLight,
-  DoubleSide,
   Group,
   HemisphereLight,
   Mesh,
-  MeshStandardMaterial,
   Object3D,
   PerspectiveCamera,
   Scene,
@@ -18,39 +16,34 @@ import {
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { buildEagleKit, createEagle, type Eagle, type EagleKit } from './eagleModel';
 import { CONFIG, makeFlock, newFlockState, stepFlock, type Inputs } from './flight';
 
 /**
- * ASSET CONTRACT
- *  - Real model (preferred): /models/eagle.glb — a rigged, animated eagle with a flight clip
- *    (any clip name works; the first clip is played and its speed is blended between glide and flap).
- *  - Until that file exists the renderer loads /models/stand-in-stork.glb, a free low-poly
- *    animated bird from the three.js examples. It is NOT an eagle and is only a temporary stand-in.
+ * MODEL SOURCES
+ *  1. /models/eagle.glb — if you add a rigged, animated eagle here it is used automatically
+ *     (its first animation clip is played and sped up or slowed down with the flight effort).
+ *  2. Otherwise a procedural golden eagle is built in code (see eagleModel.ts): layered feathers on
+ *     a jointed wing, fanned tail, hooked beak and talons.
  */
 const EAGLE_URL = '/models/eagle.glb';
-const STAND_IN_URL = '/models/stand-in-stork.glb';
-/** Rotates the model so its beak points along +Z. Change this for a different model. */
+/** Rotates a loaded GLB so its beak points along +Z. Not used by the procedural eagle. */
 const MODEL_YAW = 0;
 
-type Loaded = { scene: Object3D; clip: AnimationClip | null; standIn: boolean };
+type Loaded = { kind: 'glb'; scene: Object3D; clip: AnimationClip | null } | { kind: 'procedural' };
 
 async function loadModel(): Promise<Loaded> {
-  const loader = new GLTFLoader();
   try {
     const head = await fetch(EAGLE_URL, { method: 'HEAD' });
     const type = head.headers.get('content-type') ?? '';
     if (head.ok && !type.includes('html')) {
-      const g = await loader.loadAsync(EAGLE_URL);
-      return { scene: g.scene, clip: g.animations[0] ?? null, standIn: false };
+      const g = await new GLTFLoader().loadAsync(EAGLE_URL);
+      return { kind: 'glb', scene: g.scene, clip: g.animations[0] ?? null };
     }
   } catch {
-    /* fall through to the stand-in */
+    /* fall through to the procedural eagle */
   }
-  console.warn(
-    `[eagles] ${EAGLE_URL} not found. Add a rigged, animated eagle GLB there (with at least one flight clip). Using the temporary stand-in bird ${STAND_IN_URL}.`,
-  );
-  const g = await loader.loadAsync(STAND_IN_URL);
-  return { scene: g.scene, clip: g.animations[0] ?? null, standIn: true };
+  return { kind: 'procedural' };
 }
 
 function webglAvailable(): boolean {
@@ -84,8 +77,8 @@ export default function EagleScene() {
 
     const scene = new Scene();
     const camera = new PerspectiveCamera(CONFIG.fov, 1, 0.1, 80);
-    scene.add(new HemisphereLight(new Color('#e6d4ff'), new Color('#3a1b78'), 1.15));
-    const key = new DirectionalLight(new Color('#ffe2b0'), 2.6);
+    scene.add(new HemisphereLight(new Color('#e6d4ff'), new Color('#3a1b78'), 1.5));
+    const key = new DirectionalLight(new Color('#ffe2b0'), 3.4);
     key.position.set(-4, 6, 3);
     scene.add(key);
     const rim = new DirectionalLight(new Color('#b69cff'), 1.2);
@@ -142,64 +135,71 @@ export default function EagleScene() {
     let frame: (now: number) => void = () => {};
 
     loadModel()
-      .then(({ scene: model, clip, standIn }) => {
+      .then((loaded) => {
         if (stopped) return;
-        canvas.dataset.model = standIn ? 'stand-in' : 'eagle';
-        // Normalise: centre, and scale so the wingspan is CONFIG.primarySpan world units.
-        const box = new Box3().setFromObject(model);
-        const size = box.getSize(new Vector3());
-        const centre = box.getCenter(new Vector3());
-        const span = Math.max(size.x, size.z) || 1;
-        const norm = CONFIG.primarySpan / span;
-
-        // The stand-in ships without normals; without them it renders as a black silhouette.
-        model.traverse((o) => {
-          const m = o as Mesh;
-          if (m.isMesh && !m.geometry.getAttribute('normal')) m.geometry.computeVertexNormals();
-        });
-
+        canvas.dataset.model = loaded.kind === 'glb' ? 'eagle-glb' : 'eagle-procedural';
         const flock = makeFlock(coarse ? CONFIG.supportMobile : CONFIG.supportDesktop);
-        const mats: MeshStandardMaterial[] = [];
-        const rigs = flock.map((bird, i) => {
-          const holder = new Group();
-          const inner = cloneSkinned(model) as Object3D;
-          inner.position.set(-centre.x, -centre.y, -centre.z);
-          const wrap = new Group();
-          wrap.add(inner);
-          wrap.scale.setScalar(norm * bird.scale);
-          wrap.rotation.y = MODEL_YAW;
-          holder.add(wrap);
-          holder.visible = false;
-          group.add(holder);
+        type Rig = { holder: Group; bird: (typeof flock)[number]; step: (dt: number) => void };
+        let rigs: Rig[] = [];
+        let kit: EagleKit | null = null;
 
-          inner.traverse((o) => {
-            const m = o as Mesh;
-            if (!m.isMesh) return;
-            const src = m.material as MeshStandardMaterial;
-            // Warm brown wash over the model's own colours; shared look, slight per-bird variation.
-            const mat = new MeshStandardMaterial({
-              vertexColors: false,
-              map: src.map ?? null,
-              color: new Color().setHSL(0.075 + (i % 3) * 0.008, 0.45, 0.24 + (i % 2) * 0.04),
-              roughness: 0.72,
-              side: DoubleSide,
-              metalness: 0,
-            });
-            m.material = mat;
-            m.frustumCulled = false;
-            mats.push(mat);
+        if (loaded.kind === 'procedural') {
+          kit = buildEagleKit();
+          const k = kit;
+          disposables.push({ dispose: () => k.dispose() });
+          rigs = flock.map((bird, i) => {
+            const eagle: Eagle = createEagle(k, (i % 3 === 1 ? 0.03 : 0) + (i % 2) * 0.015);
+            const holder = new Group();
+            eagle.root.scale.setScalar(bird.scale);
+            holder.add(eagle.root);
+            holder.visible = false;
+            group.add(holder);
+            let phase = i * 2.1;
+            let time = i * 5;
+            return {
+              holder,
+              bird,
+              step: (dt: number) => {
+                const amp = Math.min(1, Math.max(0, (bird.flap - 0.28) / 0.85));
+                // wingbeat rate rises with effort, so the bird glides, then labours, then glides again
+                phase += dt * (4.2 + amp * 4.2) * (0.9 + bird.speedMul * 0.1) * (calm ? 0.5 : 1);
+                time += dt;
+                eagle.update(phase, amp, time, bird.roll, Math.max(-1, Math.min(1, bird.vel.y)));
+              },
+            };
           });
-          disposables.push(...mats);
-
-          let mixer: AnimationMixer | null = null;
-          if (clip) {
-            mixer = new AnimationMixer(inner);
-            const action = mixer.clipAction(clip);
-            action.play();
-            action.time = (i * 0.37) % clip.duration; // out of sync
-          }
-          return { holder, mixer, bird };
-        });
+        } else {
+          const model = loaded.scene;
+          const clip = loaded.clip;
+          const box = new Box3().setFromObject(model);
+          const size = box.getSize(new Vector3());
+          const centre = box.getCenter(new Vector3());
+          const norm = CONFIG.primarySpan / (Math.max(size.x, size.z) || 1);
+          rigs = flock.map((bird, i) => {
+            const holder = new Group();
+            const inner = cloneSkinned(model) as Object3D;
+            inner.position.set(-centre.x, -centre.y, -centre.z);
+            const wrap = new Group();
+            wrap.add(inner);
+            wrap.scale.setScalar(norm * bird.scale);
+            wrap.rotation.y = MODEL_YAW;
+            holder.add(wrap);
+            holder.visible = false;
+            group.add(holder);
+            inner.traverse((o) => {
+              const m = o as Mesh;
+              if (m.isMesh) m.frustumCulled = false;
+            });
+            let mixer: AnimationMixer | null = null;
+            if (clip) {
+              mixer = new AnimationMixer(inner);
+              const action = mixer.clipAction(clip);
+              action.play();
+              action.time = (i * 0.37) % clip.duration;
+            }
+            return { holder, bird, step: (dt: number) => mixer?.update(dt * bird.flap * bird.speedMul * (calm ? 0.5 : 1)) };
+          });
+        }
 
         const state = newFlockState();
         const t0 = performance.now();
@@ -237,7 +237,7 @@ export default function EagleScene() {
             r.holder.lookAt(b.pos.x + b.fwd.x, b.pos.y + b.fwd.y, b.pos.z + b.fwd.z);
             r.holder.rotateZ(b.roll);
             r.holder.visible = true;
-            if (r.mixer) r.mixer.update(dt * b.flap * b.speedMul * (calm ? 0.5 : 1));
+            r.step(dt);
           }
           renderer.render(scene, camera);
 
@@ -256,7 +256,7 @@ export default function EagleScene() {
               renderer.setPixelRatio(1);
               resize();
             } else if (fps < 24) {
-              rigs.slice(3).forEach((r) => (r.holder.visible = false, (r.bird.scale = 0)));
+              rigs.slice(3).forEach((r) => { r.holder.visible = false; r.bird.scale = 0; });
               if (fps < 14) {
                 stopped = true; // too slow: step aside and leave the site untouched
                 canvas.style.display = 'none';
