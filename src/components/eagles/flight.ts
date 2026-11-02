@@ -18,7 +18,7 @@ export const CONFIG = {
   flybyEvery: 32,
   flybyLength: 7,
   /** Primary wingspan in world units (supporting birds are smaller). */
-  primarySpan: 3.1,
+  primarySpan: 2.4,
 };
 
 export type V3 = { x: number; y: number; z: number };
@@ -162,7 +162,7 @@ export function stepFlock(birds: Bird[], s: FlockState, dt: number, aspect: numb
       const dy = b.pos.y - o.pos.y;
       const dz = b.pos.z - o.pos.z;
       const dist = Math.hypot(dx, dy, dz);
-      const min = 1.6 * (b.scale + o.scale) * 0.5 + 0.8;
+      const min = 2.6 * (b.scale + o.scale) * 0.5 + 0.7;
       if (dist < min && dist > 0.001) {
         const push = ((min - dist) / min) * 6;
         b.acc.x += (dx / dist) * push;

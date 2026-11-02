@@ -7,6 +7,11 @@ import {
   Group,
   HemisphereLight,
   Mesh,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  SRGBColorSpace,
+  TextureLoader,
+  type Texture,
   Object3D,
   PerspectiveCamera,
   Scene,
@@ -30,7 +35,13 @@ const EAGLE_URL = '/models/eagle.glb';
 /** Rotates a loaded GLB so its beak points along +Z. Not used by the procedural eagle. */
 const MODEL_YAW = 0;
 
-type Loaded = { kind: 'glb'; scene: Object3D; clip: AnimationClip | null } | { kind: 'procedural' };
+type Loaded =
+  | { kind: 'glb'; scene: Object3D; clip: AnimationClip | null }
+  | { kind: 'photo'; tex: Texture }
+  | { kind: 'procedural' };
+
+/** Real bald-eagle photograph (background removed). Drawn as a bending, banking sprite in the 3D scene. */
+const PHOTO_URL = '/images/eagle.webp';
 
 async function loadModel(): Promise<Loaded> {
   try {
@@ -41,9 +52,17 @@ async function loadModel(): Promise<Loaded> {
       return { kind: 'glb', scene: g.scene, clip: g.animations[0] ?? null };
     }
   } catch {
-    /* fall through to the procedural eagle */
+    /* fall through to the photograph */
   }
-  return { kind: 'procedural' };
+  try {
+    const tex = await new TextureLoader().loadAsync(PHOTO_URL);
+    tex.colorSpace = SRGBColorSpace;
+    tex.anisotropy = 4;
+    return { kind: 'photo', tex };
+  } catch {
+    console.warn(`[eagles] ${PHOTO_URL} missing; using the procedural eagle.`);
+    return { kind: 'procedural' };
+  }
 }
 
 function webglAvailable(): boolean {
@@ -137,13 +156,78 @@ export default function EagleScene() {
     loadModel()
       .then((loaded) => {
         if (stopped) return;
-        canvas.dataset.model = loaded.kind === 'glb' ? 'eagle-glb' : 'eagle-procedural';
+        canvas.dataset.model = `eagle-${loaded.kind}`;
         const flock = makeFlock(coarse ? CONFIG.supportMobile : CONFIG.supportDesktop);
         type Rig = { holder: Group; bird: (typeof flock)[number]; step: (dt: number) => void };
         let rigs: Rig[] = [];
         let kit: EagleKit | null = null;
 
-        if (loaded.kind === 'procedural') {
+        if (loaded.kind === 'photo') {
+          const tex = loaded.tex;
+          const img = tex.image as { width: number; height: number };
+          const W = CONFIG.primarySpan * 1.12;
+          const H = (W * img.height) / img.width;
+          // Hinge at the eagle's shoulders (measured on the photo): wings above it bend when flapping.
+          const hx = (0.4 - 0.5) * W;
+          const hy = (0.5 - 0.8) * H;
+          const hMax = H / 2 - hy;
+          disposables.push({ dispose: () => tex.dispose() });
+          rigs = flock.map((bird, i) => {
+            const geo = new PlaneGeometry(W, H, 36, 20);
+            const pos = geo.getAttribute('position');
+            const base = new Float32Array(pos.array as Float32Array);
+            const mat = new MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, alphaTest: 0.02 });
+            disposables.push(geo, mat);
+            const mesh = new Mesh(geo, mat);
+            mesh.frustumCulled = false;
+            const holder = new Group();
+            holder.add(mesh);
+            holder.visible = false;
+            group.add(holder);
+            let phase = i * 2.3;
+            let time = i * 7;
+            let face = i % 2 ? -1 : 1; // 1 = faces left like the photo, -1 = mirrored
+            let faceTarget = face;
+            return {
+              holder,
+              bird,
+              step: (dt: number) => {
+                const amp = Math.min(1, Math.max(0, (bird.flap - 0.28) / 0.85));
+                phase += dt * (3.2 + amp * 3.4) * (0.9 + bird.speedMul * 0.1) * (calm ? 0.5 : 1);
+                time += dt;
+                // flap: the wing portion above the shoulder swings through the stroke, tips lagging behind
+                for (let v = 0; v < pos.count; v++) {
+                  const x0 = base[v * 3];
+                  const y0 = base[v * 3 + 1];
+                  const h = y0 - hy;
+                  if (h <= 0) continue;
+                  const k = Math.min(1, h / hMax);
+                  const w = k * k * (3 - 2 * k);
+                  const s = Math.max(-0.18, Math.cos(phase - 1.15 * k));
+                  const f = 1 - amp * (1 - s) * w; // 1 = held up like the photo
+                  const soar = 0.015 * Math.sin(time * 0.9 + k * 2) * (1 - amp);
+                  pos.setXYZ(v, hx + (x0 - hx) * (1 - 0.16 * amp * (1 - s) * w), hy + h * f + soar, 0);
+                }
+                pos.needsUpdate = true;
+                // turn to face the direction of travel; the flip passes through edge-on, like a real turn
+                const vx = bird.vel.x;
+                if (Math.abs(vx) > 0.3) faceTarget = vx > 0 ? -1 : 1;
+                face += (faceTarget - face) * Math.min(1, dt * 2.6);
+                holder.scale.x = Math.abs(face) < 0.06 ? 0.06 * Math.sign(face || 1) : face;
+                const sign = -Math.sign(face || 1);
+                const pitch = Math.atan2(bird.vel.y, Math.max(0.4, Math.abs(vx)));
+                holder.rotation.z = sign * pitch * 0.55;
+                holder.rotation.x = bird.roll * 0.3;
+                holder.rotation.y = sign * 0.25 * Math.sin(time * 0.4 + i);
+                // distance haze: far birds soften into the violet
+                const d = Math.abs(bird.pos.z);
+                const haze = Math.min(0.55, Math.max(0, (d - 6) / 14));
+                mat.color.setRGB(1 - haze * 0.25, 1 - haze * 0.4, 1 - haze * 0.05);
+                mat.opacity = 1 - haze * 0.35;
+              },
+            };
+          });
+        } else if (loaded.kind === 'procedural') {
           kit = buildEagleKit();
           const k = kit;
           disposables.push({ dispose: () => k.dispose() });
@@ -234,8 +318,10 @@ export default function EagleScene() {
           for (const r of rigs) {
             const b = r.bird;
             r.holder.position.set(b.pos.x, b.pos.y, b.pos.z);
-            r.holder.lookAt(b.pos.x + b.fwd.x, b.pos.y + b.fwd.y, b.pos.z + b.fwd.z);
-            r.holder.rotateZ(b.roll);
+            if (loaded.kind !== 'photo') {
+              r.holder.lookAt(b.pos.x + b.fwd.x, b.pos.y + b.fwd.y, b.pos.z + b.fwd.z);
+              r.holder.rotateZ(b.roll);
+            }
             r.holder.visible = true;
             r.step(dt);
           }
