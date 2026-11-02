@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
-import { siteConfig } from '../data/siteConfig';
 import { ProductVisual } from './ProductVisual';
 import { JourneyButton } from './Journey';
 import { DepthDust } from './DepthDust';
@@ -109,8 +108,8 @@ export function Hero({ ready }: { ready: boolean }) {
         >
           <div className="cine__float">
             <ProductVisual
-              src={siteConfig.heroImage}
-              alt="F Fragrance MANIFEST, eau de parfum, 100 ml bottle"
+              src="/images/products/imagination.webp"
+              alt="F Fragrance IMAGINATION, eau de parfum, 100 ml bottle"
               eager
               bare
               label="Hero photograph goes here"
