@@ -42,7 +42,7 @@ export function Home() {
   // Load the 3D flock only after the page is interactive, so it never blocks first render.
   const [flock, setFlock] = useState(false);
   useEffect(() => {
-    if (intro) return;
+    if (intro || !siteConfig.showEagles) return;
     const idle = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: object) => number }).requestIdleCallback;
     const id = idle ? idle(() => setFlock(true), { timeout: 2500 }) : window.setTimeout(() => setFlock(true), 1200);
     return () => {

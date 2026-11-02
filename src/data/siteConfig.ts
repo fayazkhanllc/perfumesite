@@ -3,6 +3,8 @@
  * Nothing in the UI invents a value that is left null.
  */
 export const siteConfig = {
+  /** Flying eagles and their 5-second cry. Set to true to bring them back; all the code is kept. */
+  showEagles: false,
   /** Production domain, e.g. "https://25fragrance.com". Enables canonical URLs and absolute OG URLs. */
   siteUrl: '' as string,
   /** Used only to format prices that are set in products.ts. */
